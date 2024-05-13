@@ -1,0 +1,104 @@
+import com.drools.model.Transaction;
+import com.drools.model.RiskScore riskScore;
+
+
+rule "Verify cardholderName"
+    when
+            cardholderName : CardholderName()
+            // Check for variations in name
+            eval(isSimilarName(cardholderName.getName(), "John Doe"))
+        then
+            System.out.println("CardholderName name is similar to John Doe: " + user.getName());
+end
+
+function boolean isSimilarName(String name1, String name2) {
+    // Normalize names (e.g., convert to lowercase and remove whitespace)
+    String normalizedName1 = name1.toLowerCase().replaceAll("\\s+", "");
+    String normalizedName2 = name2.toLowerCase().replaceAll("\\s+", "");
+
+    // Check if names are exactly the same
+    if (normalizedName1.equals(normalizedName2)) {
+        return true;
+    }
+
+    // Check for phonetic similarity (using Soundex algorithm)
+    Soundex soundex = new Soundex();
+    return soundex.encode(normalizedName1).equals(soundex.encode(normalizedName2));
+}
+
+rule "Average Send Transaction Amount"
+    when
+        $transaction : Transaction(amount > 0)  // Ensure positive transaction amount
+        accumulate ( $pastTransaction : Transaction(cardholderName == $transaction.cardholderName, this before $transaction) over $pastAvg: average( $pastTransaction.amount ) )
+    then
+        global RiskScore riskScore;
+        double avgTransactionAmount = $pastAvg;
+        double currentAmount = $transaction.getAmount();
+
+        // Calculate risk score based on deviation from average
+        double deviation = Math.abs(currentAmount - avgTransactionAmount);
+        int score = calculateRiskScore(deviation, avgTransactionAmount);
+
+        riskScore.setScore(riskScore.getScore() + score);
+
+rule "Average Pay Transaction Amount"
+    when
+        $transaction : Transaction(amount < 0)  // Ensure negative transaction amount (payments)
+        accumulate ( $pastTransaction : Transaction(cardholderName == $transaction.cardholderName, this before $transaction) over $pastAvg: average( Math.abs($pastTransaction.amount) ) )
+    then
+        global RiskScore riskScore;
+        double avgPaymentAmount = $pastAvg;
+        double currentAmount = Math.abs($transaction.getAmount());  // Convert to positive for comparison
+
+        // Calculate risk score based on deviation from average
+        double deviation = Math.abs(currentAmount - avgPaymentAmount);
+        int score = calculateRiskScore(deviation, avgPaymentAmount);
+
+        riskScore.setScore(riskScore.getScore() + score);
+
+rule "High transaction from high-risk country"
+    when
+        $transaction : Transaction(amount > 10000,
+                                    cardholderBillingAddress contains "Iran")
+    then
+        global RiskScore riskScore;
+        riskScore.setScore(riskScore.getScore() + 5
+
+
+rule "Mismatched Billing and Shipping Addresses"
+    when
+        $transaction : Transaction(cardholderBillingAddress != cardholderIpAddress.extractCity())
+    then
+        global RiskScore riskScore;
+        riskScore.setScore(riskScore.getScore() + 2);
+
+rule "Frequent Transactions from Same Merchant"
+    when
+        $transaction : Transaction(merchantName == $pastTransaction.merchantName)
+        $pastTransaction : Transaction( this after $transaction, duration( 1d ) )
+        count( $pastTransaction ) >= 3
+    then
+        global RiskScore riskScore;
+        riskScore.setScore(riskScore.getScore() + 1);
+
+rule "Multiple Transactions in Short Timeframe"
+    when
+        $transaction : Transaction(this after $pastTransaction, duration( 1h ))
+        count( $pastTransaction ) >= 5
+    then
+        global RiskScore riskScore;
+        riskScore.setScore(riskScore.getScore() + 4);
+
+rule "Transaction Amount Exceeds Cardholder Average"
+    when
+        $transaction : Transaction(amount > (2 * averageTransactionAmount( $transaction.cardholderName )))
+    then
+        global RiskScore riskScore;
+        riskScore.setScore(riskScore.getScore() + 2);
+
+rule "Transaction from Unknown address"
+    when
+        $transaction : Transaction(cardholderIpAddress not in (loadFrom( "cardHolderAddress.csv" )))
+    then
+        global RiskScore riskScore;
+        riskScore.setScore(riskScore.getScore() + 1);
