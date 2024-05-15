@@ -6,12 +6,14 @@ import lombok.Setter;
 @Getter
 @Setter
 public class Customer {
-    private int customerId;
-    private String customerName;
+    private int id;
+    private String name;
+    private String username;
     private int phone;
     private String email;
-    private String billingAddress;
-    private String customerType;
+    private String password;
+    private String billingaddress;
+    private String type;
     private String country;
 
 

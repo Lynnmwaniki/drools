@@ -6,11 +6,13 @@ import lombok.Setter;
 @Getter
 @Setter
 public class Merchant {
-    private int merchantId;
-    private String merchantName;
+    private int id;
+    private String name;
+    private String username;
     private int phone;
     private String email;
-    private String merchantLocation;
-    private String merchantType;
+    private String password;
+    private String country;
+    private String type;
 
 }

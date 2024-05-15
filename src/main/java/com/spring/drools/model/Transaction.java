@@ -8,14 +8,14 @@ import java.sql.Timestamp;
 @Getter
 @Setter
 public class Transaction {
-    private int transactionId;
+    private int id;
     private Double amount;
     private String customerId;
     private String customerBillingAddress;
-    private String customerIpAddress;
+    private String customercountry;
     private String customerType;
     private String merchantId;
-    private String merchantLocation;
+    private String merchantcountry;
     private String merchantType;
     private Timestamp transactionDate;
     private String status;
