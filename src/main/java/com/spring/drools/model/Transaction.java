@@ -22,6 +22,22 @@ public class Transaction {
     private String currency;
     private int riskscore;
 
+    public Transaction(int id, Double amount, String customerId, String customerBillingAddress, String customercountry, String customerType, String merchantId, String merchantcountry, String merchantType, Timestamp transactionDate, String status, String currency, int riskscore) {
+        this.id = id;
+        this.amount = amount;
+        this.customerId = customerId;
+        this.customerBillingAddress = customerBillingAddress;
+        this.customercountry = customercountry;
+        this.customerType = customerType;
+        this.merchantId = merchantId;
+        this.merchantcountry = merchantcountry;
+        this.merchantType = merchantType;
+        this.transactionDate = transactionDate;
+        this.status = status;
+        this.currency = currency;
+        this.riskscore = riskscore;
+    }
+
     public int getId() {
         return id;
     }

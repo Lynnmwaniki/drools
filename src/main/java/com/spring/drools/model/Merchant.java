@@ -16,6 +16,18 @@ public class Merchant {
     private String type;
     private int riskscore;
 
+    public Merchant(int id, String name, String username, int phone, String email, String password, String country, String type, int riskscore) {
+        this.id = id;
+        this.name = name;
+        this.username = username;
+        this.phone = phone;
+        this.email = email;
+        this.password = password;
+        this.country = country;
+        this.type = type;
+        this.riskscore = riskscore;
+    }
+
     public int getId() {
         return id;
     }

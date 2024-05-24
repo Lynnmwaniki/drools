@@ -17,6 +17,18 @@ public class Customer {
     private String country;
     private int riskscore;
 
+    public Customer(int id, String name, String username, int phone, String email, String password, String billingaddress, String type, String country, int riskscore) {
+        this.id = id;
+        this.name = name;
+        this.username = username;
+        this.phone = phone;
+        this.email = email;
+        this.password = password;
+        this.billingaddress = billingaddress;
+        this.type = type;
+        this.country = country;
+        this.riskscore = riskscore;
+    }
 
     public int getId() {
         return id;
