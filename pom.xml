@@ -69,6 +69,7 @@
 <!--			<version>${drools.version}</version>-->
 <!--		</dependency>-->
 	</dependencies>
+	<packaging>war</packaging>
 
 	<build>
 		<plugins>

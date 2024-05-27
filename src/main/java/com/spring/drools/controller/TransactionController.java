@@ -13,12 +13,12 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/v1/transactions")
 public class TransactionController {
     @Autowired
-    private KieSession session;
+    private KieSession kieSession;
 
     @PostMapping("/order")
     public Order orderNow(@RequestBody Order order) {
-        session.insert(order);
-        session.fireAllRules();
+        kieSession.insert(order);
+        kieSession.fireAllRules();
         return order;
     }
 }
