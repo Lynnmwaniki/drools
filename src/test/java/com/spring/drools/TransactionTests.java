@@ -81,7 +81,6 @@ public class TransactionTests {
 
     @Test
     public void testHighRiskIndividualTransaction() {
-        // Set up test transaction
         Transaction transaction = new Transaction();
         transaction.setCardholderName("John Doe");
         transaction.setAmount(1500);
@@ -92,6 +91,32 @@ public class TransactionTests {
 
         assertTrue(transaction.isFlagged());
         assertEquals(200, transaction.getRiskScore());
+    }
+
+    @Test
+    public void testFrequentTransactionFromSameMerchant(){
+        Transaction transaction = new Transaction();
+        transaction.setCardholderName("Jane Hallo");
+        transaction.setAmount(1000);
+        transaction.setMerchantName("High-Risk Merchant");
+        transaction.setMerchantFrequency(6);
+
+        kieSession.insert(transaction);
+        kieSession.fireAllRules();
+
+        assertTrue(transaction.isFlagged());
+        assertEquals(150, transaction.getRiskScore());
+    }
+    @Test
+     public void testVerifyCardHolderName(){
+        Transaction transaction = new Transaction();
+        transaction.setCardholderName("John Doe");
+        transaction.setAmount(1000);
+
+        RiskScore riskScore = DroolsConfig.processTransaction(transaction);
+
+        assertTrue(transaction.isFlagged());
+        assertEquals(100, transaction.getRiskScore());
     }
 
 

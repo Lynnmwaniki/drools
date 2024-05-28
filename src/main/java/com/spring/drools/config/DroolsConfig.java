@@ -1,5 +1,7 @@
 package com.spring.drools.config;
 
+import com.spring.drools.model.RiskScore;
+import com.spring.drools.model.Transaction;
 import org.codehaus.plexus.component.annotations.Configuration;
 import org.drools.decisiontable.DecisionTableProviderImpl;
 import org.kie.api.builder.KieBuilder;
@@ -14,6 +16,10 @@ import org.kie.internal.builder.DecisionTableConfiguration;
 import org.kie.internal.builder.DecisionTableInputType;
 import org.kie.internal.builder.KnowledgeBuilderFactory;
 import org.kie.internal.io.ResourceFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+
+import java.io.IOException;
 
 //import org.kie.api.KieServices;
 //import org.kie.api.builder.*;
@@ -65,8 +71,11 @@ import org.kie.internal.io.ResourceFactory;
 //    }
 //}
 public class DroolsConfig {
+
     private KieServices kieServices=KieServices.Factory.get();
 
+
+    @Bean
     public KieSession getKieSession(Resource dt) {
         KieFileSystem kieFileSystem = kieServices.newKieFileSystem()
                 .write(dt);

@@ -16,7 +16,7 @@ public class Customer {
     private int phone;
     private String email;
     private String password;
-    private String billingaddress;
+    private String billingAddress;
     private String type;
     private String country;
     private boolean flagged;
