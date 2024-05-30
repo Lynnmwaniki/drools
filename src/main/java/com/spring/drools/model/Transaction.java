@@ -2,34 +2,26 @@ package com.spring.drools.model;
 
 import lombok.*;
 
-import java.sql.Timestamp;
+import java.util.Date;
 
 @Getter
 @Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-//@Entity
-//@Table(name = "transaction")
 public class Transaction {
     private int id;
     private Double amount;
     private String cardholderName;
     private String customerId;
-    @Setter
     private String billingAddress;
-    private String customerCountry;
     private String customerType;
     private String merchantId;
-    private String merchantNumber;
-    private String merchantCountry;
-    @Setter
     private String country;
     private String merchantType;
-    private Timestamp transactionDate;
+    private Date timestamp;
     private String status;
     private String currency;
-    @Getter
     private boolean flagged;
     private String individualRisk;
     private int merchantFrequency;
@@ -56,5 +48,19 @@ public class Transaction {
     }
 
     public void setSimilarNames(boolean cardholderName) {
+    }
+
+    public boolean isFlagged(boolean flagged) {
+        return flagged;
+    }
+
+    public void setMerchantFrequency(int merchantFrequency) {
+
+    }
+
+    public void setCountry(String country) {
+    }
+
+    public void setBillingAddress(String billingAddress) {
     }
 }

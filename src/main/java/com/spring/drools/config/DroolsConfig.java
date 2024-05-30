@@ -74,8 +74,12 @@ public class DroolsConfig {
 
     private KieServices kieServices=KieServices.Factory.get();
 
+    public static RiskScore processTransaction(Transaction transaction) {
 
-    @Bean
+    }
+
+
+    @Autowired
     public KieSession getKieSession(Resource dt) {
         KieFileSystem kieFileSystem = kieServices.newKieFileSystem()
                 .write(dt);

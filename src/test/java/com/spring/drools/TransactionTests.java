@@ -119,5 +119,10 @@ public class TransactionTests {
         assertEquals(100, transaction.getRiskScore());
     }
 
+    @Test
+    public void testMultipleTransactionsInShortTimeframe(){
+
+    }
+
 
 }
