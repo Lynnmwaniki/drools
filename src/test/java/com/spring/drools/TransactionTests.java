@@ -3,14 +3,18 @@ package com.spring.drools;
 import com.spring.drools.config.DroolsConfig;
 import com.spring.drools.model.RiskScore;
 import com.spring.drools.model.Transaction;
+import com.spring.drools.service.DroolsService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.kie.api.io.Resource;
-import org.kie.api.runtime.KieContainer;
 import org.kie.api.runtime.KieSession;
 import org.kie.internal.io.ResourceFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -26,7 +30,7 @@ public class TransactionTests {
     public void setup() {
         Resource dt
                 = ResourceFactory
-                .newClassPathResource("com/spring/drools/rules/Transaction.xlsx",
+                .newClassPathResource("com/spring/drools/rules/transactions.xlsx",
                         getClass());
         kieSession = new DroolsConfig().getKieSession(dt);
     }
@@ -121,6 +125,28 @@ public class TransactionTests {
 
     @Test
     public void testMultipleTransactionsInShortTimeframe(){
+        Transaction previousTransaction1 = new Transaction();
+        previousTransaction1.setCardholderName("Jane Doe");
+        previousTransaction1.setAmount(2000);
+        previousTransaction1.setTimestamp(new Date(System.currentTimeMillis() - 10 * 60 * 1000)); // 10 minutes ago
+
+        Transaction previousTransaction2 = new Transaction();
+        previousTransaction2.setCardholderName("Jane Doe");
+        previousTransaction2.setAmount(3000);
+        previousTransaction2.setTimestamp(new Date(System.currentTimeMillis() - 30 * 60 * 1000)); // 30 minutes ago
+
+        List<Transaction> previousTransactions = new ArrayList<>();
+        previousTransactions.add(previousTransaction1);
+        previousTransactions.add(previousTransaction2);
+
+        Transaction currentTransaction = new Transaction();
+        currentTransaction.setCardholderName("Jane Doe");
+        currentTransaction.setAmount(500.0);
+        currentTransaction.setTimestamp(new Date()); // Now
+
+        RiskScore riskScore = DroolsService.processTransaction(currentTransaction, previousTransactions);
+
+        assertEquals(150, riskScore.getRiskScore());
 
     }
 

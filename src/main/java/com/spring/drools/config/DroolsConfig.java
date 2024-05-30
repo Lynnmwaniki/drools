@@ -102,7 +102,7 @@ public class DroolsConfig {
         DecisionTableConfiguration configuration = KnowledgeBuilderFactory.newDecisionTableConfiguration();
         configuration.setInputType(DecisionTableInputType.XLS);
 
-        Resource dt = ResourceFactory.newClassPathResource("com/spring/drools/rules/Transaction.xlsx", getClass());
+        Resource dt = ResourceFactory.newClassPathResource("com/spring/drools/rules/transactions.xlsx", getClass());
 
         DecisionTableProviderImpl decisionTableProvider = new DecisionTableProviderImpl();
 

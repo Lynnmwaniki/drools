@@ -63,4 +63,16 @@ public class Transaction {
 
     public void setBillingAddress(String billingAddress) {
     }
+
+    public Date getTimestamp(Date timestamp) {
+    }
+
+    public String getCardholderName(String cardholderName) {
+    }
+
+    public void setTimestamp(Date date) {
+    }
+
+    public String getCardholderName() {
+    }
 }
