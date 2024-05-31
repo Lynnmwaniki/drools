@@ -11,11 +11,15 @@ import org.springframework.boot.autoconfigure.domain.EntityScan;
 //@Entity
 //@Table(name = "riskscore")
 public class RiskScore {
-    private int score;
+    private int riskScore;
     private String action; //Approved, Rejected, Review
 
 
     public int getRiskScore() {
-        return 0;
+        return riskScore;
+    }
+
+    public void setRiskScore(int riskScore) {
+        this.riskScore = riskScore;
     }
 }

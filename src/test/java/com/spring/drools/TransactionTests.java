@@ -7,6 +7,7 @@ import com.spring.drools.service.DroolsService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.kie.api.io.Resource;
+import org.kie.api.KieServices;
 import org.kie.api.runtime.KieSession;
 import org.kie.internal.io.ResourceFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -87,7 +88,7 @@ public class TransactionTests {
     public void testHighRiskIndividualTransaction() {
         Transaction transaction = new Transaction();
         transaction.setCardholderName("John Doe");
-        transaction.setAmount(1500);
+        transaction.setAmount(1500.0);
         transaction.setIndividualRisk("HIGH");
 
         kieSession.insert(transaction);
@@ -101,7 +102,7 @@ public class TransactionTests {
     public void testFrequentTransactionFromSameMerchant(){
         Transaction transaction = new Transaction();
         transaction.setCardholderName("Jane Hallo");
-        transaction.setAmount(1000);
+        transaction.setAmount(100.0);
         transaction.setMerchantName("High-Risk Merchant");
         transaction.setMerchantFrequency(6);
 
@@ -115,7 +116,7 @@ public class TransactionTests {
      public void testVerifyCardHolderName(){
         Transaction transaction = new Transaction();
         transaction.setCardholderName("John Doe");
-        transaction.setAmount(1000);
+        transaction.setAmount(100.0);
 
         RiskScore riskScore = DroolsConfig.processTransaction(transaction);
 
@@ -127,13 +128,13 @@ public class TransactionTests {
     public void testMultipleTransactionsInShortTimeframe(){
         Transaction previousTransaction1 = new Transaction();
         previousTransaction1.setCardholderName("Jane Doe");
-        previousTransaction1.setAmount(2000);
-        previousTransaction1.setTimestamp(new Date(System.currentTimeMillis() - 10 * 60 * 1000)); // 10 minutes ago
+        previousTransaction1.setAmount(200.0);
+        previousTransaction1.setTimestamp(new Date(System.currentTimeMillis() - 10 * 60 * 100)); // 10 minutes ago
 
         Transaction previousTransaction2 = new Transaction();
         previousTransaction2.setCardholderName("Jane Doe");
-        previousTransaction2.setAmount(3000);
-        previousTransaction2.setTimestamp(new Date(System.currentTimeMillis() - 30 * 60 * 1000)); // 30 minutes ago
+        previousTransaction2.setAmount(300.0);
+        previousTransaction2.setTimestamp(new Date(System.currentTimeMillis() - 30 * 60 * 100)); // 30 minutes ago
 
         List<Transaction> previousTransactions = new ArrayList<>();
         previousTransactions.add(previousTransaction1);
@@ -150,5 +151,31 @@ public class TransactionTests {
 
     }
 
+    @Test
+    public void testTransactionAmountExceedsCardHolderAverage(){
+        List<Transaction> pastTransactions = new ArrayList<>();
+        pastTransactions.add(new Transaction("John Doe", 100.0, null, null, null, 0, false));
+        pastTransactions.add(new Transaction("John Doe", 200.0, null, null, null, 0, false));
+        pastTransactions.add(new Transaction("John Doe", 150.0, null, null, null, 0, false));
+
+        // Set up current transaction
+        Transaction transaction = new Transaction("John Doe", 500.0, null, null, null, 0, false);
+
+        // Process the transaction
+        RiskScore riskScore = DroolsService.processTransaction(transaction, pastTransactions);
+
+        assertEquals(100, riskScore.getRiskScore());
+    }
+
+    @Test
+    public void testErrorInTransactionAmount(){
+
+    }
+
+
+
 
 }
+
+
+

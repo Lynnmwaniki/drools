@@ -20,7 +20,7 @@ public class Customer {
     private String type;
     private String country;
     private boolean flagged;
-    private int riskscore;
+    private int riskScore;
 
 
 }

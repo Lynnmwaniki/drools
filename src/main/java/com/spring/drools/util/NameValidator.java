@@ -1,5 +1,7 @@
 package com.spring.drools.util;
 
+
+
 public class NameValidator {
     public static boolean isSimilarName(String name1, String name2) {
         //Create a LevenshteinDistance object to calculate the distance between two strings

@@ -19,6 +19,6 @@ public class Merchant {
     private String country;
     private String type;
     private boolean flagged;
-    private int riskscore;
+    private int riskScore;
 
     }

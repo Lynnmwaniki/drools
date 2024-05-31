@@ -63,7 +63,14 @@
 			<artifactId>kie-ci</artifactId>
 			<version>8.32.0.Final</version>
 		</dependency>
-<!--		<dependency>-->
+		<!-- https://mvnrepository.com/artifact/com.github.wslf/LevenshteinDistance -->
+		<dependency>
+			<groupId>com.github.wslf</groupId>
+			<artifactId>LevenshteinDistance</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+
+		<!--		<dependency>-->
 <!--			<groupId>org.drools</groupId>-->
 <!--			<artifactId>drools-mvel</artifactId>-->
 <!--			<version>${drools.version}</version>-->
